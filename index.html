@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
+    <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/animation.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <img src="./image/logo.svg" alt="Логотип" class="logo">
+
+            <nav class="navbar">
+                <ul>
+                    <li><a href="./index.html">Главная</a></li>
+                    <li><a href="#second">Программы</a></li>
+                    <li><a href="#">Реквизиты</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-controls">
+                <button class="vision-btn" aria-label="Версия для слабовидящих">
+                    <img src="./image/Eye.svg" alt="">
+                    <span class="vision-text">Версия <br>для слабовидящих</span>
+                </button>
+
+                <div class="burger-container" aria-label="Меню">
+                    <div class="burger">
+                        <div class="line1"></div>
+                        <div class="line2"></div>
+                        <div class="line3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">Программы</a></li>
+            <li><a href="#">Реквизиты</a></li>
+        </ul>
+    </header>
+
+    <main>
+        <section class="first blue-bg" id="first">
+            <h1>Информационные <br>технологии и программирование</h1>
+            <div class="all_dops">
+               <div class="all_dops">
+                    <button class="dop_programm" data-section="card/all_programs.html">Все программы</button>
+                    <button class="dop_programm active_black" data-section="card/programming.html">Информационные технологии</button>
+                    <button class="dop_programm" data-section="card/sport.html">Спорт и фитнес</button>
+                    <button class="dop_programm" data-section="card/pedagogy.html">Педагогика</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="second" data-bg-color="blue" id="second">
+            <!-- Карточки будут загружаться автоматически через JS -->
+        </section>
+
+        <section class="consultation">
+            <div class="cons_main">
+                <div class="cons_text">
+                    <h2>Бесплатная консультация</h2>
+                    <h3>Заполните форму и вы получите бесплатну консультацию от наших специалистов обещаем быстрый ответ и персональный подход</h3>
+                </div>
+                    <img src="./image/animation.gif" alt="gif" class="cons_animation" aria-hidden="true">
+            </div>
+
+            <div class="register_window blue-bg">
+                <div class="reg_main">
+                    <h2>Свяжитесь с нами</h2>
+                    <form action="#" method="post" class="register" id="contactForm">
+                        <input type="text" name="name" placeholder="Ваше имя" required>
+                        <input type="email" name="email" placeholder="Ваш e-mail" required>
+                        <textarea name="message" placeholder="Ваше сообщение" required></textarea>
+                        <div class="form-footer">
+                            <input type="submit" value="Отправить">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="main_foot">
+            <div class="director">
+                <img src="./image/Lanchikov.png" alt="Директор">
+                <div class="dir_profile">
+                    <h3>Директор ГАПОУ ТСПК</h3>
+                    <h2>Ланчиков Максим Николаевич</h2>
+                </div>
+            </div>
+            <div class="info_foot">
+                <div class="feedback">
+                    <h2>Обратная связь</h2>
+                    <div class="corpus">
+                        <!-- Контакты 1 корпуса -->
+                        <div class="num_corp">
+                            <h3>1 Корпус</h3>
+                            <div class="text_corp">
+                                <p>Вахта <br>24-10-25</p>
+                                <p>Приёмная директора <br>24-30-54</p>
+                                <p>E-mail <br>so_tspk-zo@yandex.ru</p>
+                            </div>
+                        </div>
+                        <!-- Контакты 2 корпуса -->
+                        <div class="num_corp">
+                            <h3>2 Корпус</h3>
+                            <div class="text_corp">
+                                <p>Вахта <br>48-20-93</p>
+                                <p>Приёмная директора <br>28-36-44</p>
+                                <p>E-mail <br>so_tspk-zo@yandex.ru</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info_corpus">
+                    <div class="num_corp">
+                        <h3>Главный корпус</h3>
+                        <p>Самарская область, г. Тольятти, ул. Мурысева, 84</p>
+                    </div>
+                    <div class="num_corp">
+                        <h3>Второй корпус</h3>
+                        <p>Самарская область, г. Тольятти, ул. Ленинградская, 28</p>
+                    </div>
+                    <div class="contact_images">
+                        <img src="./image/tg.svg" alt="Telegram">
+                        <img src="./image/vk.svg" alt="ВКонтакте">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <script src="./js/BurgerMenu.js"></script>
+    <script src="./js/filter.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
