@@ -1,0 +1,170 @@
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+    padding: clamp(30px, 4vw, 139px) clamp(20px, 8vw, 162px) clamp(40px, 6vw, 90px);
+    border-top: 1px solid black;
+}
+
+footer h2 {
+    color: black;
+    font-size: 24px;
+}
+
+footer h3 {
+    color: #3161DE;
+    font-size: 18px;
+}
+
+footer p {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.main_foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    gap: 30px;
+    position: relative;
+}
+
+.director,
+.dir_profile,
+.feedback,
+.num_corp,
+.text_corp,
+.info_corpus {
+    display: flex;
+    flex-direction: column;
+}
+
+.director {
+    gap: 12px;
+    justify-content: center;
+}
+
+.director img {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 500px;
+}
+
+.info_foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 920px;
+    gap: 147px;
+}
+
+.feedback {
+    gap: 24px;
+}
+
+.corpus {
+    display: flex;
+    gap: 36px;
+}
+
+.num_corp {
+    gap: 8px;
+    max-width: 295px;
+}
+
+.text_corp {
+    gap: 16px;
+}
+
+.info_corpus {
+    justify-content: space-between;
+    min-height: 186px;
+    gap: 8px;
+}
+
+@media (max-width: 1010px) {
+    .info_foot {
+        gap: 30px;
+    }
+}
+
+@media (max-width: 425px) {
+    footer {
+        padding: 20px 15px 30px !important;
+    }
+    
+    footer h2 {
+        font-size: 20px !important;
+    }
+    
+    footer h3 {
+        font-size: 16px !important;
+    }
+    
+    footer p {
+        font-size: 14px !important;
+    }
+    
+    .main_foot {
+        gap: 20px;
+    }
+    
+    .director img {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .info_foot {
+        gap: 20px !important;
+    }
+    
+    .corpus {
+        flex-direction: column;
+        gap: 20px !important;
+    }
+    
+    .info_corpus {
+        min-height: auto !important;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 375px) {
+    footer {
+        padding: 15px 10px 25px !important;
+    }
+    
+    footer h2 {
+        font-size: 18px !important;
+    }
+    
+    .director {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .contact_images img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 320px) {
+    footer h2 {
+        font-size: 16px !important;
+    }
+    
+    footer h3 {
+        font-size: 14px !important;
+    }
+    
+    .director img {
+        width: 50px !important;
+        height: 50px !important;
+    }
+}
