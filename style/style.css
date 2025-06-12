@@ -385,7 +385,7 @@ main {
 }
 
 .orange-bg {
-  background-color: #F59E0B;
+  background-color: #F59E0B !important;
   color: white;
 }
 
