@@ -1,8 +1,9 @@
-// initial.js
-function loadCourseDetailsByTitle(courseTitle) {
-    const courseMap = {
+// initial.js - Скрипт для загрузки контента курсов в programmsite.html
+
+$(document).ready(function() {
+    // Сопоставление названий курсов с файлами
+    const courseFiles = {
         'Блокчейн разработчик': 'blockchain.html',
-        'Разработчик мобильных приложений': 'mobile.html',
         'Веб-дизайн (верстальщик)': 'web-design.html',
         '3D моделлер': '3d-model.html',
         'UX/UI дизайнер': 'design.html',
@@ -10,61 +11,69 @@ function loadCourseDetailsByTitle(courseTitle) {
         'Интернет-маркетолог': 'marketolog.html'
     };
 
-    const fileName = courseMap[courseTitle] || 'programmsite.html';
-    
-    // Показываем индикатор загрузки
-    $('main').html('<div class="loading-indicator">Загрузка данных...</div>');
-    
-    // Загружаем соответствующий файл
-    $.get(`./ITmore/${fileName}`)
-        .done(function(data) {
-            // Создаем временный элемент для парсинга HTML
-            const $temp = $('<div>').html(data);
-            
-            // Находим нужные элементы в загруженных данных
-            const $mainInfoModule = $temp.find('section.main_info_module').first();
-            const $mainContent = $temp.find('main').html();
-            
-            // Заменяем содержимое на текущей странице
-            if ($mainInfoModule.length) {
-                $('section.main_info_module').replaceWith($mainInfoModule);
-            }
-            
-            if ($mainContent) {
-                $('main').html($mainContent);
-            } else {
-                // Если main контента нет, используем весь документ кроме header и footer
-                $('main').html($temp.find('body').children().not('header, footer, script').html());
-            }
-            
-            // Инициализируем необходимые компоненты
-            if (typeof initPage === 'function') {
-                initPage();
-            }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Ошибка загрузки данных курса:', textStatus, errorThrown);
-            $('main').html('<div class="error-message">Ошибка загрузки данных курса. Пожалуйста, попробуйте позже.</div>');
-        });
-}
+    // Функция для загрузки содержимого курса
+    function loadCourseDetailsByTitle(courseTitle) {
+        const fileName = courseFiles[courseTitle];
+        if (!fileName) return;
 
-// Инициализация при загрузке страницы
-$(document).ready(function() {
-    // Обработка кликов на кнопках "Подробнее"
+        $.get(fileName)
+            .done(function(data) {
+                const $content = $(data);
+                
+                // Обновляем заголовок
+                const $mainInfoModule = $content.filter('.main_info_module').first();
+                $('section.main_info_module').replaceWith($mainInfoModule);
+                
+                // Обновляем основное содержимое
+                const $mainContent = $content.filter('main').first();
+                $('main').replaceWith($mainContent);
+                
+                // Инициализируем модули (если есть)
+                if ($('.module_card').length) {
+                    initModules();
+                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Ошибка загрузки файла курса:', textStatus, errorThrown);
+            });
+    }
+
+    // Функция для инициализации работы модулей (раскрытие/скрытие)
+    function initModules() {
+        $('.module-more_btn').on('click', function() {
+            const $module = $(this).closest('.module_card');
+            $module.toggleClass('expanded');
+            
+            // Анимация стрелки
+            $(this).find('.arrow-icon').toggleClass('rotated');
+            
+            // Плавное раскрытие списка тем
+            $module.find('.module-topics').slideToggle(300);
+        });
+    }
+
+    // Обработчик для кнопок "Подробнее" на карточках
     $(document).on('click', '.more_details a', function(e) {
         e.preventDefault();
         const courseTitle = $(this).closest('.card').find('h3').text().trim();
-        loadCourseDetailsByTitle(courseTitle);
         
-        // Прокрутка к верху страницы после загрузки
-        $('html, body').animate({scrollTop: 0}, 'slow');
+        if (window.location.pathname.includes('programmsite.html')) {
+            loadCourseDetailsByTitle(courseTitle);
+        } else {
+            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+        }
     });
 
-    // Загрузка данных при открытии страницы с параметром title
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseTitle = urlParams.get('title');
-    
-    if (courseTitle) {
-        loadCourseDetailsByTitle(courseTitle);
+    // Если мы на странице programmsite.html, загружаем соответствующий курс
+    if (window.location.pathname.includes('programmsite.html')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseTitle = urlParams.get('title');
+        
+        if (courseTitle) {
+            loadCourseDetailsByTitle(courseTitle);
+        } else {
+            // Загружаем первый курс по умолчанию, если не указан параметр
+            loadCourseDetailsByTitle('Блокчейн разработчик');
+        }
     }
 });
