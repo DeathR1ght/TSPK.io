@@ -91,11 +91,6 @@ header {
   z-index: 1;
 }
 
-@media (max-width: 1452px) {
-  .main_info_module .icon_block {
-    max-width: min(35%, 400px);
-  }
-}
 .modules_section {
   display: flex;
   flex-direction: column;
@@ -143,9 +138,6 @@ header {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-}
-.module_card .module-more_btn:hover {
-  background-color: rgba(240, 240, 240, 0);
 }
 .module_card .module-more_btn .arrow-icon {
   width: clamp(22px, 3vw, 26px);
@@ -243,9 +235,6 @@ header {
 .teachers .it_teacher:nth-child(even) {
   flex-direction: row-reverse;
 }
-.teachers .it_teacher:nth-child(even) .teacher_content {
-  padding-left: 0;
-}
 .teachers .it_teacher:nth-child(even) .name_end {
   text-align: right;
 }
@@ -333,95 +322,6 @@ header {
   height: 100%;
 }
 
-@media (max-width: 992px) {
-  .main_info_module {
-    flex-direction: column;
-    text-align: left;
-    align-items: flex-start;
-    padding-top: 25px;
-    min-height: auto !important;
-  }
-  .main_info_module .icon_block {
-    position: relative;
-    right: auto;
-    left: auto;
-    bottom: auto;
-    top: auto;
-    transform: none;
-    max-width: 100%;
-    width: 100%;
-    order: 2;
-    overflow: hidden;
-  }
-  .main_info_module .main_text {
-    order: 1;
-    align-items: flex-start;
-    margin-top: 50px;
-  }
-  .main_info_module .main_text button {
-    margin: 0;
-  }
-  .teachers .it_teacher {
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(30px, 5vw, 50px);
-  }
-  .teachers .it_teacher .teacher_content,
-  .teachers .it_teacher .img_teacher {
-    width: 100%;
-    -o-object-position: center;
-       object-position: center;
-  }
-  .teachers .it_teacher .teacher_content {
-    order: 2;
-    padding: 0;
-    gap: clamp(20px, 3vw, 30px);
-  }
-  .teachers .it_teacher .img_teacher {
-    order: 1;
-  }
-  .teachers .it_teacher .name_teacher {
-    align-items: flex-start;
-  }
-  .teachers .it_teacher .name_teacher h2 {
-    display: none;
-  }
-  .teachers .it_teacher:nth-child(even) {
-    flex-direction: column;
-  }
-  .teachers .it_teacher .name_end {
-    text-align: left !important;
-  }
-  .teachers .it_teacher .name_end h2 {
-    display: block;
-  }
-  .main_course_block {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .main_course_block .main_info_course {
-    max-width: 100%;
-  }
-  .post_main {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-@media (max-width: 576px) {
-  .module_card {
-    padding: 15px 20px;
-  }
-  .teachers .it_teacher .img_teacher {
-    max-height: 350px;
-  }
-  .main_info_module .icon_block {
-    max-width: 100%;
-  }
-}
-.purple-bg {
-  background-color: #7432E3 !important;
-}
-
 .teachersPD {
   display: flex;
   flex-direction: column;
@@ -435,7 +335,6 @@ header {
 .teach_block {
   display: flex;
   position: relative;
-  height: auto !important;
   width: 100%;
   justify-content: center;
   flex-wrap: wrap;
@@ -491,7 +390,6 @@ header {
   width: 100%;
   background-color: #F59E0B;
   border-radius: 20px;
-  height: auto;
 }
 .modules_main_ped .modules-container {
   display: flex;
@@ -566,36 +464,6 @@ header {
   border-radius: 20px;
 }
 
-@media (max-width: 1440px) {
-  .modules_main_ped .modules-container {
-    padding: 0 20px;
-  }
-}
-.switch_module {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-.switch_module span {
-  display: none;
-}
-.switch_module span:nth-child(-n+4) {
-  display: inline-block;
-}
-
-@media (max-width: 992px) {
-  .modules_main_ped .module_ped_card {
-    flex: 0 0 calc(50% - 15px);
-  }
-}
-@media (max-width: 576px) {
-  .modules_main_ped .module_ped_card {
-    flex: 0 0 100%;
-    margin: 0 0 20px 0;
-  }
-}
 .switch_module {
   display: flex;
   justify-content: center;
@@ -646,16 +514,86 @@ header {
   background-color: #F59E0B;
 }
 
+@media (max-width: 1452px) {
+  .main_info_module .icon_block {
+    max-width: min(35%, 400px);
+  }
+}
+@media (max-width: 1440px) {
+  .modules_main_ped .modules-container {
+    padding: 0 20px;
+  }
+}
+@media (max-width: 992px) {
+  .main_info_module {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    padding-top: 25px;
+    min-height: auto !important;
+  }
+  .main_info_module .icon_block {
+    position: relative;
+    right: auto;
+    transform: none;
+    max-width: 100%;
+    width: 100%;
+    order: 2;
+  }
+  .main_info_module .main_text {
+    order: 1;
+    align-items: flex-start;
+    margin-top: 50px;
+  }
+  .teachers .it_teacher {
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(30px, 5vw, 50px);
+  }
+  .teachers .it_teacher .teacher_content,
+  .teachers .it_teacher .img_teacher {
+    width: 100%;
+  }
+  .teachers .it_teacher .teacher_content {
+    order: 2;
+    padding: 0;
+    gap: clamp(20px, 3vw, 30px);
+  }
+  .teachers .it_teacher .img_teacher {
+    order: 1;
+  }
+  .teachers .it_teacher .name_teacher h2 {
+    display: none;
+  }
+  .teachers .it_teacher:nth-child(even) {
+    flex-direction: column;
+  }
+  .teachers .it_teacher .name_end {
+    text-align: left !important;
+  }
+  .teachers .it_teacher .name_end h2 {
+    display: block;
+  }
+  .main_course_block {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .main_course_block .main_info_course {
+    max-width: 100%;
+  }
+  .post_main {
+    flex-direction: column;
+    align-items: center;
+  }
+  .modules_main_ped .module_ped_card {
+    flex: 0 0 calc(50% - 15px);
+  }
+}
 @media (max-width: 768px) {
   .pd_teacher {
     position: static;
     transform: none !important;
     margin-bottom: 40px;
-  }
-  .pd_teacher:nth-child(1), .pd_teacher:nth-child(2), .pd_teacher:nth-child(3), .pd_teacher:nth-child(4) {
-    left: auto;
-    transform: none !important;
-    height: 300px !important;
   }
   .img_teacherPD {
     width: 200px;
@@ -665,12 +603,30 @@ header {
     font-size: 20px;
   }
 }
-#ped-bg {
-  background: url("../image/ITimg/BackgroundIT.png") no-repeat center center;
-  z-index: 1;
+@media (max-width: 576px) {
+  .module_card {
+    padding: 15px 20px;
+  }
+  .teachers .it_teacher .img_teacher {
+    max-height: 350px;
+  }
+  .main_info_module .icon_block {
+    max-width: 100%;
+  }
+  .modules_main_ped .module_ped_card {
+    flex: 0 0 100%;
+    margin: 0 0 20px 0;
+  }
+}
+.purple-bg {
+  background-color: #7432E3 !important;
 }
 
+#ped-bg {
+  background-image: url("/image/PDimg/repetitor.png");
+  z-index: 1;
+}
 #ped-bg::before {
-  background: url("../image/ITimg/BackgroundIT.png") no-repeat center center;
+  background-image: url("/image/PDimg/repetitor.png");
   z-index: -1;
 }/*# sourceMappingURL=dopstyle.css.map */
