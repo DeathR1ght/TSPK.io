@@ -1,5 +1,6 @@
 $(document).ready(function() {
     function initModules() {
+        // Обработка обычных карточек
         $('.module_card').each(function() {
             const $card = $(this);
             const $button = $card.find('.module-more_btn');
@@ -12,8 +13,24 @@ $(document).ready(function() {
             $button.attr('aria-expanded', 'false');
             $topics.css('max-height', '0');
         });
+        
+        // Обработка спортивных карточек
+        $('.module_cardSP').each(function() {
+            const $card = $(this);
+            const $themes = $card.find('.main_theme');
+            const $work = $card.find('.block_work');
+            
+            $themes.hide();
+            $work.hide();
+            
+            $card.find('h2').on('click', function() {
+                $themes.slideToggle(300);
+                $work.slideToggle(300);
+            });
+        });
     }
     
+    // Остальной код остается без изменений
     $(document).on('click', '.module-more_btn', function(e) {
         e.preventDefault();
         e.stopPropagation();

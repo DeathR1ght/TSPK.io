@@ -319,11 +319,6 @@ function shuffleArray(array) {
     return array;
 }
 
-$(document).ready(function() {
-    // Инициализация скроллинга модулей
-    initModulesScrolling();
-});
-
 function initModulesScrolling() {
     const $modulesContainer = $('.modules-container');
     const $cards = $('.module_ped_card');

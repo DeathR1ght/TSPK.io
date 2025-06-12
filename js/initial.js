@@ -15,7 +15,35 @@ $(document).ready(function() {
     if ($('.module_card').length) {
         initModules();
     }
+    
+    // Добавляем инициализацию для спортивных модулей
+    if ($('.module_cardSP').length) {
+        initSportModules();
+    }
+    
+    if ($('.module_ped_card').length) {
+        initPedagogyModulesScrolling();
+    }
 });
+
+// Добавляем новую функцию для инициализации спортивных модулей
+function initSportModules() {
+    $('.module_cardSP').each(function() {
+        const $card = $(this);
+        const $themes = $card.find('.main_theme');
+        const $work = $card.find('.block_work');
+        
+        // Скрываем темы и работы по умолчанию
+        $themes.hide();
+        $work.hide();
+        
+        // Добавляем обработчик клика на заголовок модуля
+        $card.find('h2').on('click', function() {
+            $themes.slideToggle(300);
+            $work.slideToggle(300);
+        });
+    });
+}
 
 function loadCourseDetailsByTitle(courseTitle) {
     const courseFiles = {
@@ -49,15 +77,29 @@ function loadCourseDetailsByTitle(courseTitle) {
 }
 
 function loadSportCourseDetailsByTitle(courseTitle) {
+    // Нормализуем название курса: удаляем переносы строк, лишние пробелы, приводим к нижнему регистру
+    const normalizedTitle = courseTitle
+        .replace(/\s+/g, ' ') // Заменяем множественные пробелы на один
+        .replace(/\n/g, '')   // Удаляем переносы строк
+        .trim()               // Удаляем пробелы в начале и конце
+        .toLowerCase();       // Приводим к нижнему регистру
+    
     const sportCourseFiles = {
-        'Фитнес-тренер универсал': 'trener.html',
-        'Инструктор по реабилитации': 'instructor.html',
-        'Предпринимательство в сфере спортивно-оздоровительных клубов': 'enterprise.html',
-        'Менеджмент в сфере физической культуры и спорта': 'management.html'
+        'фитнес-тренер универсал': 'trener.html',
+        'инструктор по реабилитации': 'instructor.html',
+        'предпринимательство в сфере спортивно-оздоровительных клубов': 'enterprise.html',
+        'менеджмент в сфере физической культуры и спорта': 'management.html'
     };
 
-    const fileName = sportCourseFiles[courseTitle];
-    if (!fileName) return;
+    // Ищем совпадение в нормализованных названиях
+    const fileName = Object.entries(sportCourseFiles).find(([key]) => 
+        normalizedTitle.includes(key.toLowerCase())
+    )?.[1];
+
+    if (!fileName) {
+        console.error('Файл курса не найден для:', courseTitle);
+        return;
+    }
 
     $.get(`SPmore/${fileName}`)
         .done(function(data) {
@@ -68,11 +110,13 @@ function loadSportCourseDetailsByTitle(courseTitle) {
             $('section.main_info_module').replaceWith($mainInfoModule);
             $('main').replaceWith($mainContent);
 
-            // Устанавливаем зеленый цвет для окна регистрации
             $('.register_window').removeClass('blue-bg orange-bg').addClass('green-bg');
+            
+            console.log('Контент курса успешно загружен:', fileName);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Ошибка загрузки файла спортивного курса:', textStatus, errorThrown);
+            console.error('Ошибка загрузки файла курса:', textStatus, errorThrown);
+            // Можно добавить fallback-контент здесь
         });
 }
 
@@ -124,7 +168,7 @@ function initModules() {
     });
 }
 
-function initModulesScrolling() {
+function initPedagogyModulesScrolling() {
     const $modulesContainer = $('.modules-container');
     const $cards = $('.module_ped_card');
     const $dots = $('.switch_module span');
@@ -186,4 +230,4 @@ function initModulesScrolling() {
 
 window.loadPedagogyCourseDetailsByTitle = loadPedagogyCourseDetailsByTitle;
 window.loadSportCourseDetailsByTitle = loadSportCourseDetailsByTitle;
-window.initModulesScrolling = initModulesScrolling;
+window.initPedagogyModulesScrolling = initPedagogyModulesScrolling;
