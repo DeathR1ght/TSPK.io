@@ -70,13 +70,12 @@ $(document).ready(function() {
     }
 });
 
-// initial.js
 function loadPedagogyCourseDetailsByTitle(courseTitle) {
     // Определяем соответствие между названиями педагогических курсов и файлами
     const pedagogyCourseFiles = {
-        'Логопед': 'therapist.html',
-        'Педагог': 'pedagog.html',
-        'Тьютор': 'tutor.html'
+        'Педагог-репетитор': 'tutor.html',
+        'Педагог дополнительного образования': 'dop_pedagog.html',
+        'Логопед': 'therapist.html'
     };
 
     const fileName = pedagogyCourseFiles[courseTitle];
@@ -95,8 +94,8 @@ function loadPedagogyCourseDetailsByTitle(courseTitle) {
             $('main').replaceWith($mainContent);
 
             // Инициализируем модули, если они есть
-            if ($('.module_card').length) {
-                initModules();
+            if ($('.module_ped_card').length) {
+                initModulesScrolling();
             }
         })
         .fail(function(jqXHR, textStatus, errorThrown) {

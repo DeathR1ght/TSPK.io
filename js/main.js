@@ -36,9 +36,9 @@ function setupEventHandlers() {
     
     $(window).on('resize', movePriceOnMobile);
     
-    // Измененный обработчик для карточек - теперь учитывает programmsite.html
     $(document).on('click', '.card', function() {
-        if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html')) {
+        if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html') && 
+            !window.location.pathname.includes('pedagogysite.html')) {
             handleMobileCardClick($(this));
         }
     });
@@ -50,20 +50,13 @@ function setupEventHandlers() {
     $(document).on('click', '.more_details a', function(e) {
         e.preventDefault();
         const courseTitle = $(this).closest('.card').find('h3').text().trim();
-
-        // Определяем, является ли курс педагогическим
-        const isPedagogyCourse = $(this).closest('.card').attr('id') === 'pedagogy' || 'correction';
+        const isPedagogyCourse = $(this).closest('.card').attr('id') === 'pedagogy' || 
+                                $(this).closest('.card').attr('id') === 'correction';
 
         if (isPedagogyCourse) {
-            // Перенаправляем на pedagogysite.html для педагогических курсов
             window.location.href = `pedagogysite.html?title=${encodeURIComponent(courseTitle)}`;
         } else {
-            // Перенаправляем на programmsite.html для IT-курсов
-            if (window.location.pathname.includes('programmsite.html')) {
-                window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
-            } else {
-                window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
-            }
+            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
         }
 
         $('html, body').animate({scrollTop: 0}, 'slow');
@@ -383,5 +376,39 @@ function initModulesScrolling() {
         const newCardWidth = $cards.outerWidth(true);
         $modulesContainer.css('width', `${(newCardWidth + gap) * totalCards}px`);
         scrollToPosition(currentPosition);
+    });
+}
+
+function setupEventHandlers() {
+    $(document).on('click', '.all_dops .dop_programm', function() {
+        handleProgramButtonClick($(this));
+    });
+    
+    $(window).on('resize', movePriceOnMobile);
+    
+    $(document).on('click', '.card', function() {
+        if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html') && 
+            !window.location.pathname.includes('pedagogysite.html')) {
+            handleMobileCardClick($(this));
+        }
+    });
+    
+    $(document).on('click', '.load-more-btn', function() {
+        handleLoadMoreClick($(this));
+    });
+    
+    $(document).on('click', '.more_details a', function(e) {
+        e.preventDefault();
+        const courseTitle = $(this).closest('.card').find('h3').text().trim();
+        const isPedagogyCourse = $(this).closest('.card').attr('id') === 'pedagogy' || 
+                                $(this).closest('.card').attr('id') === 'correction';
+
+        if (isPedagogyCourse) {
+            window.location.href = `pedagogysite.html?title=${encodeURIComponent(courseTitle)}`;
+        } else {
+            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+        }
+
+        $('html, body').animate({scrollTop: 0}, 'slow');
     });
 }
