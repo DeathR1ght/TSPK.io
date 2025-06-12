@@ -69,3 +69,37 @@ $(document).ready(function() {
         initModules();
     }
 });
+
+// initial.js
+function loadPedagogyCourseDetailsByTitle(courseTitle) {
+    // Определяем соответствие между названиями педагогических курсов и файлами
+    const pedagogyCourseFiles = {
+        'Логопед': 'therapist.html',
+        'Педагог': 'pedagog.html',
+        'Тьютор': 'tutor.html'
+    };
+
+    const fileName = pedagogyCourseFiles[courseTitle];
+    if (!fileName) return;
+
+    // Загружаем соответствующий файл
+    $.get(`PDmore/${fileName}`)
+        .done(function(data) {
+            // Парсим HTML и извлекаем нужные секции
+            const $content = $(data);
+            const $mainInfoModule = $content.filter('section.main_info_module');
+            const $mainContent = $content.filter('main');
+
+            // Очищаем и обновляем содержимое на странице
+            $('section.main_info_module').replaceWith($mainInfoModule);
+            $('main').replaceWith($mainContent);
+
+            // Инициализируем модули, если они есть
+            if ($('.module_card').length) {
+                initModules();
+            }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('Ошибка загрузки файла педагогического курса:', textStatus, errorThrown);
+        });
+}
