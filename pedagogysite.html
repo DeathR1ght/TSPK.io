@@ -114,21 +114,22 @@
     <script src="./js/dops.js"></script>
     <script src="./js/initial.js"></script>
 
-    <script>
-    $(document).ready(function() {
-    // Проверяем параметры URL и загружаем соответствующий контент
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseTitle = urlParams.get('title');
-    
-    if (courseTitle) {
-        loadPedagogyCourseDetailsByTitle(courseTitle);
-    }
-    
-    // Инициализация модулей, если они есть
-    if ($('.module_ped_card').length) {
-        initModulesScrolling();
-    }
-});
-</script>
+        <script>
+            $(document).ready(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const courseTitle = urlParams.get('title');
+
+                if (courseTitle) {
+                    window.loadPedagogyCourseDetailsByTitle(courseTitle);
+                }
+
+                // Инициализация модулей после загрузки контента
+                $(document).ajaxStop(function() {
+                    if ($('.module_ped_card').length) {
+                        window.initModulesScrolling();
+                    }
+                });
+            });
+        </script>
 </body>
 </html>
