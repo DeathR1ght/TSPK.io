@@ -49,17 +49,19 @@ function setupEventHandlers() {
     
     // Обработчик для кнопок "Подробнее" на карточках
     $(document).on('click', '.more_details a', function(e) {
-        e.preventDefault();
-        const courseTitle = $(this).closest('.card').find('h3').text().trim();
-        
-        if (window.location.pathname.includes('programmsite.html')) {
-            loadCourseDetailsByTitle(courseTitle);
-        } else {
-            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
-        }
-        
-        $('html, body').animate({scrollTop: 0}, 'slow');
-    });
+    e.preventDefault();
+    const courseTitle = $(this).closest('.card').find('h3').text().trim();
+    
+    if (window.location.pathname.includes('programmsite.html')) {
+        // Перенаправляем с параметром title
+        window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+    } else {
+        // Для index.html просто переходим на programmsite.html
+        window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+    }
+    
+    $('html, body').animate({scrollTop: 0}, 'slow');
+});
 }
 
 // Остальные функции остаются без изменений
