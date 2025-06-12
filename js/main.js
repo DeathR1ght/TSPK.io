@@ -310,3 +310,78 @@ function shuffleArray(array) {
     }
     return array;
 }
+
+$(document).ready(function() {
+    // Инициализация скроллинга модулей
+    initModulesScrolling();
+});
+
+function initModulesScrolling() {
+    const $modulesContainer = $('.modules-container');
+    const $cards = $('.module_ped_card');
+    const $dots = $('.switch_module span');
+    const cardWidth = $cards.outerWidth(true);
+    const gap = 70; // Расстояние между карточками
+    const visibleCards = 3; // Показываем 3 карточки
+    const totalCards = $cards.length;
+    let currentPosition = 0;
+    
+    // Рассчитываем максимальную позицию для прокрутки
+    let maxPosition = totalCards - visibleCards;
+
+    // Устанавливаем ширину контейнера для правильного выравнивания
+    $modulesContainer.css('width', `${(cardWidth + gap) * totalCards}px`);
+
+    // Обновляем точки навигации
+    function updateDots() {
+        $dots.removeClass('active');
+        // Создаем точки только для видимых позиций
+        $dots.each(function(index) {
+            if (index <= maxPosition) {
+                $(this).show();
+                if (index === currentPosition) {
+                    $(this).addClass('active');
+                }
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    // Прокрутка к позиции
+    function scrollToPosition(pos) {
+        currentPosition = Math.max(0, Math.min(pos, maxPosition));
+        const scrollAmount = currentPosition * (cardWidth + gap);
+        $modulesContainer.css('transform', `translateX(-${scrollAmount}px)`);
+        updateDots();
+    }
+
+    // Обработчики кнопок
+    $('.switch_module .left').on('click', function() {
+        if (currentPosition > 0) {
+            scrollToPosition(currentPosition - 1);
+        }
+    });
+
+    $('.switch_module .right').on('click', function() {
+        if (currentPosition < maxPosition) {
+            scrollToPosition(currentPosition + 1);
+        }
+    });
+
+    // Обработчики точек
+    $dots.on('click', function() {
+        const index = $dots.index(this);
+        scrollToPosition(index);
+    });
+
+    // Инициализация
+    updateDots();
+    
+    // Адаптация при изменении размера окна
+    $(window).on('resize', function() {
+        const newCardWidth = $cards.outerWidth(true);
+        $modulesContainer.css('width', `${(newCardWidth + gap) * totalCards}px`);
+        scrollToPosition(currentPosition);
+    });
+}
