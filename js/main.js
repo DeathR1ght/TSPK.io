@@ -37,11 +37,12 @@ function setupEventHandlers() {
     $(window).on('resize', movePriceOnMobile);
     
     $(document).on('click', '.card', function() {
-        if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html') && 
-            !window.location.pathname.includes('pedagogysite.html')) {
-            handleMobileCardClick($(this));
-        }
-    });
+    if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html') && 
+        !window.location.pathname.includes('pedagogysite.html') &&
+        !window.location.pathname.includes('sportsite.html')) {
+        handleMobileCardClick($(this));
+    }
+});
     
     $(document).on('click', '.load-more-btn', function() {
         handleLoadMoreClick($(this));
@@ -150,9 +151,19 @@ function handleProgramButtonClick($button) {
 }
 
 function handleMobileCardClick($card) {
-    const programTitle = $card.find('h3').text().trim();
-    const programUrl = `programmsite.html?title=${encodeURIComponent(programTitle)}`;
-    window.location.href = programUrl;
+    const courseTitle = $card.find('h3').text().trim();
+    const isPedagogyCourse = $card.attr('id') === 'pedagogy' || 
+                           $card.attr('id') === 'correction';
+    const isSportCourse = $card.attr('id') === 'trainer' || 
+                        $card.attr('id') === 'management';
+
+    if (isPedagogyCourse) {
+        window.location.href = `pedagogysite.html?title=${encodeURIComponent(courseTitle)}`;
+    } else if (isSportCourse) {
+        window.location.href = `sportsite.html?title=${encodeURIComponent(courseTitle)}`;
+    } else {
+        window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+    }
 }
 
 function handleLoadMoreClick($button) {
