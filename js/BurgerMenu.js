@@ -1,16 +1,17 @@
 $(document).ready(function() {
     // Инициализация версии для слабовидящих
-    initVisionMode();
+    if (typeof initVisionMode === 'function') {
+        initVisionMode();
+    }
     
     // Бургер-меню с анимациями
     $('.burger').click(function(e) {
-        e.stopPropagation(); // Предотвращаем всплытие события
+        e.stopPropagation();
         toggleBurgerMenu();
     });
 
     // Закрытие меню при клике на ссылку
     $('.nav-links a').click(function(e) {
-        // Для ссылок с якорями обрабатываем плавный скролл
         if ($(this).attr('href').includes('#')) {
             e.preventDefault();
             const href = $(this).attr('href');
@@ -20,7 +21,9 @@ $(document).ready(function() {
                 window.location.href = path;
                 localStorage.setItem('pendingScroll', '#' + hash);
             } else {
-                scrollToTarget(href);
+                if (typeof scrollToTarget === 'function') {
+                    scrollToTarget(href);
+                }
             }
         }
         
@@ -40,52 +43,6 @@ $(document).ready(function() {
     });
 });
 
-// Добавляем функцию для прокрутки к цели (аналогичную из main.js)
-function scrollToTarget(target) {
-    if ($(target).length) {
-        $('html, body').animate({
-            scrollTop: $(target).offset().top - 100
-        }, 800);
-    }
-}
-
-// Функции для версии для слабовидящих
-function initVisionMode() {
-    // Проверяем сохраненные настройки
-    if(localStorage.getItem('visionMode') === 'enabled') {
-        $('body').addClass('vision-mode');
-    }
-    
-    // Обработчик клика на кнопку
-    $('.vision-btn').click(function(e) {
-        e.preventDefault();
-        toggleVisionMode();
-    });
-    
-    // Обновляем текст кнопки при загрузке
-    updateVisionButtonText();
-}
-
-function toggleVisionMode() {
-    $('body').toggleClass('vision-mode');
-    
-    // Сохраняем состояние в localStorage
-    if($('body').hasClass('vision-mode')) {
-        localStorage.setItem('visionMode', 'enabled');
-    } else {
-        localStorage.removeItem('visionMode');
-    }
-    
-    // Обновляем текст кнопки
-    updateVisionButtonText();
-}
-
-function updateVisionButtonText() {
-    const isActive = $('body').hasClass('vision-mode');
-    const text = isActive ? 'Обычная версия' : 'Версия для слабовидящих';
-    $('.vision-text').html(text.replace(' ', '<br>'));
-}
-
 // Функции для бургер-меню
 function toggleBurgerMenu() {
     const $burgerContainer = $('.burger-container');
@@ -93,15 +50,11 @@ function toggleBurgerMenu() {
     const $burger = $('.burger');
     const $body = $('body');
     
-    // Переключаем классы для анимации
     $burgerContainer.toggleClass('active');
     $navLinks.toggleClass('active');
     $body.toggleClass('no-scroll');
-    
-    // Анимация иконки бургера
     $burger.toggleClass('toggle');
     
-    // Для версии для слабовидящих - дополнительные стили
     if($('body').hasClass('vision-mode')) {
         $navLinks.css({
             'background-color': '#fff',
@@ -119,12 +72,9 @@ function closeBurgerMenu() {
     const $navLinks = $('.nav-links');
     const $burgerContainer = $('.burger-container');
     
-    // Анимация закрытия
     $burgerContainer.removeClass('active');
     $navLinks.removeClass('active');
     $('body').removeClass('no-scroll');
-    
-    // Возвращаем бургер в исходное состояние
     $burger.removeClass('toggle');
 }
 

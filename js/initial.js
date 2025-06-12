@@ -1,6 +1,21 @@
-// initial.js
+$(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseTitle = urlParams.get('title');
+    
+    if (courseTitle) {
+        if (window.location.pathname.includes('pedagogysite.html')) {
+            loadPedagogyCourseDetailsByTitle(courseTitle);
+        } else {
+            loadCourseDetailsByTitle(courseTitle);
+        }
+    }
+    
+    if ($('.module_card').length) {
+        initModules();
+    }
+});
+
 function loadCourseDetailsByTitle(courseTitle) {
-    // Определяем соответствие между названиями курсов и файлами
     const courseFiles = {
         'Блокчейн разработчик': 'blockchain.html',
         'Веб-дизайн (верстальщик)': 'web-design.html',
@@ -13,19 +28,15 @@ function loadCourseDetailsByTitle(courseTitle) {
     const fileName = courseFiles[courseTitle];
     if (!fileName) return;
 
-    // Загружаем соответствующий файл
     $.get(`ITmore/${fileName}`)
         .done(function(data) {
-            // Парсим HTML и извлекаем нужные секции
             const $content = $(data);
             const $mainInfoModule = $content.filter('section.main_info_module');
             const $mainContent = $content.filter('main');
 
-            // Очищаем и обновляем содержимое на странице
             $('section.main_info_module').replaceWith($mainInfoModule);
             $('main').replaceWith($mainContent);
 
-            // Инициализируем модули, если они есть
             if ($('.module_card').length) {
                 initModules();
             }
@@ -36,7 +47,6 @@ function loadCourseDetailsByTitle(courseTitle) {
 }
 
 function initModules() {
-    // Обработчик для кнопок раскрытия/скрытия тем модуля
     $(document).on('click', '.module-more_btn', function() {
         const $btn = $(this);
         const $topics = $btn.closest('.module_card').find('.module-topics');
@@ -45,7 +55,6 @@ function initModules() {
         $topics.slideToggle(300);
         $arrow.toggleClass('rotated');
         
-        // Анимация поворота стрелки
         if ($arrow.hasClass('rotated')) {
             $arrow.css('transform', 'rotate(180deg)');
         } else {
@@ -54,24 +63,7 @@ function initModules() {
     });
 }
 
-// Инициализация при загрузке страницы
-$(document).ready(function() {
-    // Если есть параметр title в URL, загружаем соответствующий курс
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseTitle = urlParams.get('title');
-    
-    if (courseTitle) {
-        loadCourseDetailsByTitle(courseTitle);
-    }
-    
-    // Инициализация модулей, если они есть
-    if ($('.module_card').length) {
-        initModules();
-    }
-});
-
 function loadPedagogyCourseDetailsByTitle(courseTitle) {
-    // Определяем соответствие между названиями педагогических курсов и файлами
     const pedagogyCourseFiles = {
         'Педагог-репетитор': 'tutor.html',
         'Педагог дополнительного образования': 'dop_pedagog.html',
@@ -81,19 +73,15 @@ function loadPedagogyCourseDetailsByTitle(courseTitle) {
     const fileName = pedagogyCourseFiles[courseTitle];
     if (!fileName) return;
 
-    // Загружаем соответствующий файл
     $.get(`PDmore/${fileName}`)
         .done(function(data) {
-            // Парсим HTML и извлекаем нужные секции
             const $content = $(data);
             const $mainInfoModule = $content.filter('section.main_info_module');
             const $mainContent = $content.filter('main');
 
-            // Очищаем и обновляем содержимое на странице
             $('section.main_info_module').replaceWith($mainInfoModule);
             $('main').replaceWith($mainContent);
 
-            // Инициализируем модули, если они есть
             if ($('.module_ped_card').length) {
                 initModulesScrolling();
             }
@@ -102,3 +90,66 @@ function loadPedagogyCourseDetailsByTitle(courseTitle) {
             console.error('Ошибка загрузки файла педагогического курса:', textStatus, errorThrown);
         });
 }
+
+function initModulesScrolling() {
+    const $modulesContainer = $('.modules-container');
+    const $cards = $('.module_ped_card');
+    const $dots = $('.switch_module span');
+    const cardWidth = $cards.outerWidth(true);
+    const gap = 70;
+    const visibleCards = 3;
+    const totalCards = $cards.length;
+    let currentPosition = 0;
+    let maxPosition = totalCards - visibleCards;
+
+    $modulesContainer.css('width', `${(cardWidth + gap) * totalCards}px`);
+
+    function updateDots() {
+        $dots.removeClass('active');
+        $dots.each(function(index) {
+            if (index <= maxPosition) {
+                $(this).show();
+                if (index === currentPosition) {
+                    $(this).addClass('active');
+                }
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    function scrollToPosition(pos) {
+        currentPosition = Math.max(0, Math.min(pos, maxPosition));
+        const scrollAmount = currentPosition * (cardWidth + gap);
+        $modulesContainer.css('transform', `translateX(-${scrollAmount}px)`);
+        updateDots();
+    }
+
+    $('.switch_module .left').on('click', function() {
+        if (currentPosition > 0) {
+            scrollToPosition(currentPosition - 1);
+        }
+    });
+
+    $('.switch_module .right').on('click', function() {
+        if (currentPosition < maxPosition) {
+            scrollToPosition(currentPosition + 1);
+        }
+    });
+
+    $dots.on('click', function() {
+        const index = $dots.index(this);
+        scrollToPosition(index);
+    });
+
+    updateDots();
+    
+    $(window).on('resize', function() {
+        const newCardWidth = $cards.outerWidth(true);
+        $modulesContainer.css('width', `${(newCardWidth + gap) * totalCards}px`);
+        scrollToPosition(currentPosition);
+    });
+}
+
+window.loadPedagogyCourseDetailsByTitle = loadPedagogyCourseDetailsByTitle;
+window.initModulesScrolling = initModulesScrolling;
