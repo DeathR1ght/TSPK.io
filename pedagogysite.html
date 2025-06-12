@@ -44,7 +44,7 @@
     </header>
 
     <section class="main_info_module" id="ped-bg">
-        
+
     </section>
 
     <main>
@@ -113,5 +113,22 @@
     <script src="./js/BurgerMenu.js"></script>
     <script src="./js/dops.js"></script>
     <script src="./js/initial.js"></script>
+
+    <script>
+    $(document).ready(function() {
+    // Проверяем параметры URL и загружаем соответствующий контент
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseTitle = urlParams.get('title');
+    
+    if (courseTitle) {
+        loadPedagogyCourseDetailsByTitle(courseTitle);
+    }
+    
+    // Инициализация модулей, если они есть
+    if ($('.module_ped_card').length) {
+        initModulesScrolling();
+    }
+});
+</script>
 </body>
 </html>
