@@ -5,6 +5,8 @@ $(document).ready(function() {
     if (courseTitle) {
         if (window.location.pathname.includes('pedagogysite.html')) {
             loadPedagogyCourseDetailsByTitle(courseTitle);
+        } else if (window.location.pathname.includes('sportsite.html')) {
+            loadSportCourseDetailsByTitle(courseTitle);
         } else {
             loadCourseDetailsByTitle(courseTitle);
         }
@@ -46,21 +48,32 @@ function loadCourseDetailsByTitle(courseTitle) {
         });
 }
 
-function initModules() {
-    $(document).on('click', '.module-more_btn', function() {
-        const $btn = $(this);
-        const $topics = $btn.closest('.module_card').find('.module-topics');
-        const $arrow = $btn.find('.arrow-icon');
-        
-        $topics.slideToggle(300);
-        $arrow.toggleClass('rotated');
-        
-        if ($arrow.hasClass('rotated')) {
-            $arrow.css('transform', 'rotate(180deg)');
-        } else {
-            $arrow.css('transform', 'rotate(0deg)');
-        }
-    });
+function loadSportCourseDetailsByTitle(courseTitle) {
+    const sportCourseFiles = {
+        'Фитнес-тренер универсал': 'trener.html',
+        'Инструктор по реабилитации': 'instructor.html',
+        'Предпринимательство в сфере спортивно-оздоровительных клубов': 'enterprise.html',
+        'Менеджмент в сфере физической культуры и спорта': 'management.html'
+    };
+
+    const fileName = sportCourseFiles[courseTitle];
+    if (!fileName) return;
+
+    $.get(`SPmore/${fileName}`)
+        .done(function(data) {
+            const $content = $(data);
+            const $mainInfoModule = $content.filter('section.main_info_module');
+            const $mainContent = $content.filter('main');
+
+            $('section.main_info_module').replaceWith($mainInfoModule);
+            $('main').replaceWith($mainContent);
+
+            // Устанавливаем зеленый цвет для окна регистрации
+            $('.register_window').removeClass('blue-bg orange-bg').addClass('green-bg');
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error('Ошибка загрузки файла спортивного курса:', textStatus, errorThrown);
+        });
 }
 
 function loadPedagogyCourseDetailsByTitle(courseTitle) {
@@ -92,6 +105,23 @@ function loadPedagogyCourseDetailsByTitle(courseTitle) {
         .fail(function(jqXHR, textStatus, errorThrown) {
             console.error('Ошибка загрузки файла педагогического курса:', textStatus, errorThrown);
         });
+}
+
+function initModules() {
+    $(document).on('click', '.module-more_btn', function() {
+        const $btn = $(this);
+        const $topics = $btn.closest('.module_card').find('.module-topics');
+        const $arrow = $btn.find('.arrow-icon');
+        
+        $topics.slideToggle(300);
+        $arrow.toggleClass('rotated');
+        
+        if ($arrow.hasClass('rotated')) {
+            $arrow.css('transform', 'rotate(180deg)');
+        } else {
+            $arrow.css('transform', 'rotate(0deg)');
+        }
+    });
 }
 
 function initModulesScrolling() {
@@ -155,4 +185,5 @@ function initModulesScrolling() {
 }
 
 window.loadPedagogyCourseDetailsByTitle = loadPedagogyCourseDetailsByTitle;
+window.loadSportCourseDetailsByTitle = loadSportCourseDetailsByTitle;
 window.initModulesScrolling = initModulesScrolling;

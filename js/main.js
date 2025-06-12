@@ -48,19 +48,23 @@ function setupEventHandlers() {
     });
     
     $(document).on('click', '.more_details a', function(e) {
-        e.preventDefault();
-        const courseTitle = $(this).closest('.card').find('h3').text().trim();
-        const isPedagogyCourse = $(this).closest('.card').attr('id') === 'pedagogy' || 
-                                $(this).closest('.card').attr('id') === 'correction';
+    e.preventDefault();
+    const courseTitle = $(this).closest('.card').find('h3').text().trim();
+    const isPedagogyCourse = $(this).closest('.card').attr('id') === 'pedagogy' || 
+                            $(this).closest('.card').attr('id') === 'correction';
+    const isSportCourse = $(this).closest('.card').attr('id') === 'trainer' || 
+                         $(this).closest('.card').attr('id') === 'management';
 
-        if (isPedagogyCourse) {
-            window.location.href = `pedagogysite.html?title=${encodeURIComponent(courseTitle)}`;
-        } else {
-            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
-        }
+    if (isPedagogyCourse) {
+        window.location.href = `pedagogysite.html?title=${encodeURIComponent(courseTitle)}`;
+    } else if (isSportCourse) {
+        window.location.href = `sportsite.html?title=${encodeURIComponent(courseTitle)}`;
+    } else {
+        window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+    }
 
-        $('html, body').animate({scrollTop: 0}, 'slow');
-    });
+    $('html, body').animate({scrollTop: 0}, 'slow');
+});
 }
 
 // Остальные функции остаются без изменений
