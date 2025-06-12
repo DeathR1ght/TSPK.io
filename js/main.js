@@ -1,86 +1,96 @@
 $(document).ready(function() {
-    // Инициализация при загрузке страницы
     initPage();
-    
-    // Обработчики событий
     setupEventHandlers();
-    
-    // Проверяем хеш в URL при загрузке страницы
     handleInitialHash();
 });
 
 function initPage() {
-    // Загружаем начальные карточки
-    loadInitialCards();
+    // Инициализация для страницы programmsite.html
+    if (window.location.pathname.includes('programmsite.html')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseTitle = urlParams.get('title');
+        
+        if (courseTitle) {
+            loadCourseDetailsByTitle(courseTitle);
+        }
+        
+        // Инициализация модулей, если они есть
+        if ($('.module_card').length) {
+            initModules();
+        }
+    } 
+    // Инициализация для других страниц
+    else {
+        loadInitialCards();
+    }
     
-    // Инициализируем плавный скролл
+    // Общие инициализации
     initSmoothScroll();
-    
-    // Инициализируем обработку формы
     initFormHandler();
 }
 
 function setupEventHandlers() {
-    // Обработчик клика на кнопки в секции first
     $(document).on('click', '.all_dops .dop_programm', function() {
         handleProgramButtonClick($(this));
     });
     
-    // Обработчик ресайза окна
-    $(window).on('resize', function() {
-        movePriceOnMobile();
-    });
+    $(window).on('resize', movePriceOnMobile);
     
-    // Обработчик клика по карточкам на мобильных устройствах
+    // Измененный обработчик для карточек - теперь учитывает programmsite.html
     $(document).on('click', '.card', function() {
-        if ($(window).width() <= 1024) {
+        if ($(window).width() <= 1024 && !window.location.pathname.includes('programmsite.html')) {
             handleMobileCardClick($(this));
         }
     });
     
-    // Обработчик кнопки "Ещё"
     $(document).on('click', '.load-more-btn', function() {
         handleLoadMoreClick($(this));
     });
+    
+    // Обработчик для кнопок "Подробнее" на карточках
+    $(document).on('click', '.more_details a', function(e) {
+        e.preventDefault();
+        const courseTitle = $(this).closest('.card').find('h3').text().trim();
+        
+        if (window.location.pathname.includes('programmsite.html')) {
+            loadCourseDetailsByTitle(courseTitle);
+        } else {
+            window.location.href = `programmsite.html?title=${encodeURIComponent(courseTitle)}`;
+        }
+        
+        $('html, body').animate({scrollTop: 0}, 'slow');
+    });
 }
 
+// Остальные функции остаются без изменений
 function handleInitialHash() {
-    // Если страница загружена с хешем в URL (например, index.html#second)
     if (window.location.hash) {
         const target = window.location.hash;
         scrollToTarget(target);
     }
-}
-
-function initSmoothScroll() {
-    // Плавный скролл для всех внутренних ссылок
-    $(document).on('click', 'a[href^="#"], a[href*="#"]', function(e) {
-        e.preventDefault();
-        
-        const href = $(this).attr('href');
-        
-        // Если ссылка содержит путь к другой странице (например, index.html#second)
-        if (href.includes('.html#')) {
-            const [path, hash] = href.split('#');
-            
-            // Переходим на новую страницу
-            window.location.href = path;
-            
-            // Сохраняем хеш для прокрутки после загрузки
-            localStorage.setItem('pendingScroll', '#' + hash);
-        } 
-        // Обычная якорная ссылка на текущей странице
-        else if (href.startsWith('#')) {
-            scrollToTarget(href);
-        }
-    });
     
-    // Проверяем, есть ли сохраненный хеш для прокрутки после перехода между страницами
     const pendingScroll = localStorage.getItem('pendingScroll');
     if (pendingScroll) {
         localStorage.removeItem('pendingScroll');
         scrollToTarget(pendingScroll);
     }
+}
+
+function initSmoothScroll() {
+    $(document).on('click', 'a[href^="#"], a[href*="#"]', function(e) {
+        e.preventDefault();
+        
+        const href = $(this).attr('href');
+        
+        if (href.includes('.html#')) {
+            const [path, hash] = href.split('#');
+            window.location.href = path;
+            localStorage.setItem('pendingScroll', '#' + hash);
+        } 
+        else if (href.startsWith('#')) {
+            scrollToTarget(href);
+        }
+    });
 }
 
 function scrollToTarget(target) {
@@ -92,7 +102,7 @@ function scrollToTarget(target) {
 }
 
 function initFormHandler() {
-    $('#contactForm').on('submit', function(e) {
+    $(document).on('submit', '#contactForm', function(e) {
         e.preventDefault();
         handleFormSubmit($(this));
     });
@@ -103,11 +113,9 @@ function handleFormSubmit($form) {
     submitBtn.addClass('loading');
     submitBtn.prop('disabled', true);
     
-    // Симуляция отправки формы
     setTimeout(function() {
         submitBtn.removeClass('loading');
         submitBtn.val('Отправлено!');
-        
         showSuccessMessage($form.closest('.register_window'));
     }, 1500);
 }
@@ -184,47 +192,43 @@ function loadInitialCards() {
 }
 
 function loadSingleSection(sectionFile, buttonText) {
-    // Анимация исчезновения текущей секции
     $('section.second').css({
         'opacity': '0',
         'transition': 'opacity 0.3s ease'
     });
     
     setTimeout(() => {
-        $.get(sectionFile, function(data) {
-            const $newSection = $(data);
-            const bgColor = $newSection.data('bg-color');
-            
-            // Анимация изменения цвета фона
-            $('.register_window, section.first').css('transition', 'background-color 0.5s ease')
-                .removeClass('blue-bg green-bg orange-bg')
-                .addClass(bgColor + '-bg');
-            
-            $('section.first h1').text(buttonText);
-            
-            // Вставляем новую секцию с прозрачностью
-            $newSection.css('opacity', '0');
-            $('section.second').replaceWith($newSection);
-            
-            // Анимация появления новой секции
-            setTimeout(() => {
-                $newSection.css({
-                    'opacity': '1',
-                    'transition': 'opacity 0.5s ease'
-                });
-            }, 50);
-            
-            movePriceOnMobile();
-            $.getScript('./js/filter.js');
-        }).fail(function() {
-            console.error('Ошибка загрузки файла:', sectionFile);
-            $('section.second').css('opacity', '1');
-        });
+        $.get(sectionFile)
+            .done(function(data) {
+                const $newSection = $(data);
+                const bgColor = $newSection.data('bg-color');
+                
+                $('.register_window, section.first').css('transition', 'background-color 0.5s ease')
+                    .removeClass('blue-bg green-bg orange-bg')
+                    .addClass(bgColor + '-bg');
+                
+                $('section.first h1').text(buttonText);
+                
+                $newSection.css('opacity', '0');
+                $('section.second').replaceWith($newSection);
+                
+                setTimeout(() => {
+                    $newSection.css({
+                        'opacity': '1',
+                        'transition': 'opacity 0.5s ease'
+                    });
+                }, 50);
+                
+                movePriceOnMobile();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Ошибка загрузки файла:', textStatus, errorThrown);
+                $('section.second').css('opacity', '1');
+            });
     }, 300);
 }
 
 function loadAllPrograms() {
-    // Анимация исчезновения текущей секции
     $('section.second').css({
         'opacity': '0',
         'transition': 'opacity 0.3s ease'
@@ -232,57 +236,62 @@ function loadAllPrograms() {
     
     setTimeout(() => {
         const allCards = [];
-        
-        $.when(
+        const requests = [
             $.get('card/programming.html'),
             $.get('card/sport.html'),
             $.get('card/pedagogy.html')
-        ).done(function(progData, sportData, pedData) {
-            const $progCards = $(progData[0]).find('.card');
-            const $sportCards = $(sportData[0]).find('.card');
-            const $pedCards = $(pedData[0]).find('.card');
-            
-            $progCards.each(function() { allCards.push($(this).prop('outerHTML')); });
-            $sportCards.each(function() { allCards.push($(this).prop('outerHTML')); });
-            $pedCards.each(function() { allCards.push($(this).prop('outerHTML')); });
-            
-            shuffleArray(allCards);
-            
-            const $newSection = $('<section class="second" data-bg-color="blue" id="second"></section>');
-            $newSection.append('<h2>Все программы</h2>');
-            
-            const $tableCard = $('<div class="table_card"></div>');
-            const initialCards = allCards.slice(0, 6);
-            $tableCard.append(initialCards.join(''));
-            $newSection.append($tableCard);
-                    
-            if (allCards.length > 6) {
-                const $loadMoreContainer = $('<div class="load-more-container"></div>');
-                const $loadMoreBtn = $('<button class="load-more-btn"><img src="./image/more.svg" alt="more"><p>Ещё</p></button>');
-                $loadMoreBtn.data('all-cards', allCards);
-                $loadMoreContainer.append($loadMoreBtn);
-                $newSection.append($loadMoreContainer);
-            }
-            
-            $newSection.css('opacity', '0');
-            $('section.second').replaceWith($newSection);
-            
-            $('.register_window, section.first').css('transition', 'background-color 0.5s ease')
-                .removeClass('blue-bg green-bg orange-bg')
-                .addClass('blue-bg');
-            
-            $('section.first h1').text('Все программы');
-            
-            setTimeout(() => {
-                $newSection.css({
-                    'opacity': '1',
-                    'transition': 'opacity 0.5s ease'
-                });
-            }, 50);
-            
-            movePriceOnMobile();
-            $.getScript('./js/filter.js');
-        });
+        ];
+        
+        $.when(...requests)
+            .done(function(progData, sportData, pedData) {
+                const $progCards = $(progData[0]).find('.card');
+                const $sportCards = $(sportData[0]).find('.card');
+                const $pedCards = $(pedData[0]).find('.card');
+                
+                $progCards.each(function() { allCards.push($(this).prop('outerHTML')); });
+                $sportCards.each(function() { allCards.push($(this).prop('outerHTML')); });
+                $pedCards.each(function() { allCards.push($(this).prop('outerHTML')); });
+                
+                shuffleArray(allCards);
+                
+                const $newSection = $('<section class="second" data-bg-color="blue" id="second"></section>');
+                $newSection.append('<h2>Все программы</h2>');
+                
+                const $tableCard = $('<div class="table_card"></div>');
+                const initialCards = allCards.slice(0, 6);
+                $tableCard.append(initialCards.join(''));
+                $newSection.append($tableCard);
+                        
+                if (allCards.length > 6) {
+                    const $loadMoreContainer = $('<div class="load-more-container"></div>');
+                    const $loadMoreBtn = $('<button class="load-more-btn"><img src="./image/more.svg" alt="more"><p>Ещё</p></button>');
+                    $loadMoreBtn.data('all-cards', allCards);
+                    $loadMoreContainer.append($loadMoreBtn);
+                    $newSection.append($loadMoreContainer);
+                }
+                
+                $newSection.css('opacity', '0');
+                $('section.second').replaceWith($newSection);
+                
+                $('.register_window, section.first').css('transition', 'background-color 0.5s ease')
+                    .removeClass('blue-bg green-bg orange-bg')
+                    .addClass('blue-bg');
+                
+                $('section.first h1').text('Все программы');
+                
+                setTimeout(() => {
+                    $newSection.css({
+                        'opacity': '1',
+                        'transition': 'opacity 0.5s ease'
+                    });
+                }, 50);
+                
+                movePriceOnMobile();
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Ошибка загрузки файлов:', textStatus, errorThrown);
+                $('section.second').css('opacity', '1');
+            });
     }, 300);
 }
 
