@@ -82,6 +82,9 @@ function loadPedagogyCourseDetailsByTitle(courseTitle) {
             $('section.main_info_module').replaceWith($mainInfoModule);
             $('main').replaceWith($mainContent);
 
+            // Устанавливаем оранжевый цвет для окна регистрации
+            $('.register_window').removeClass('blue-bg green-bg').addClass('orange-bg');
+
             if ($('.module_ped_card').length) {
                 initModulesScrolling();
             }
