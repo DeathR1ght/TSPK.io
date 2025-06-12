@@ -380,7 +380,7 @@ main {
 }
 
 .green-bg {
-  background-color: #16A34A;
+  background-color: #16A34A !important;
   color: white;
 }
 
